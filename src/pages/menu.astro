@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import MenuExplorer from '../components/MenuExplorer.astro';
+import { pages } from '../data/site';
+---
+<BaseLayout {...pages.menu}>
+  <div class="shell inner-page menu-page">
+    <PageIntro eyebrow="Zajrzyj do naszej kuchni" title="Przykładowe menu" description="Domowe smaki przez cały dzień." />
+    <p class="sample-notice">To przykłady potraw, które gotujemy — nie jadłospis na dziś. Menu dla swojego zamówienia sprawdzisz w FoodFlow.</p>
+    <MenuExplorer />
+  </div>
+</BaseLayout>

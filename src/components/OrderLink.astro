@@ -1,0 +1,9 @@
+---
+import { getOrderUrl } from '../config/foodflow';
+import type { DietId } from '../data/diets';
+interface Props { diet?: DietId | undefined; class?: string; label?: string; }
+const { diet, class: className, label } = Astro.props;
+---
+<a href={getOrderUrl(diet)} class:list={['button', className]} data-order-link aria-label={label}>
+  <slot>Zamów dietę</slot>
+</a>

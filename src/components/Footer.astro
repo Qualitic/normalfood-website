@@ -1,0 +1,15 @@
+---
+import { brand } from '../data/site';
+import { orderUrl } from '../config/foodflow';
+---
+<footer class="site-footer shell">
+  <div class="footer-top">
+    <a href="/" class="footer-brand">{brand.name}</a>
+    <div class="footer-links"><a href="/kontakt">Kontakt</a><a href="/dostawa">Warszawa</a><a href={orderUrl} data-order-link>Zamówienia online: FoodFlow</a></div>
+  </div>
+  <address class="footer-contact">
+    <a href={brand.phoneHref}>{brand.phone}</a>
+    <a href={`mailto:${brand.email}`}>{brand.email}</a>
+    <span>{brand.street}, {brand.postalCode} {brand.city}</span>
+  </address>
+</footer>

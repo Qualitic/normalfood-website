@@ -1,0 +1,40 @@
+---
+import OrderLink from './OrderLink.astro';
+import { navigation } from '../data/site';
+const current = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isCurrent = (href: string) => current === href || current.startsWith(`${href}/`);
+---
+<a class="skip-link" href="#main">Przejdź do treści</a>
+<header class="site-header shell">
+  <a href="/" class="brand-logo" aria-label="Normal Food — strona główna">
+    <img src="/logo.png" width="420" height="230" alt="Normal Food — całodzienne domowe jedzenie" fetchpriority="high" />
+  </a>
+  <nav class="desktop-nav" aria-label="Nawigacja główna">
+    {navigation.map(({ label, href }) => <a href={href} aria-current={isCurrent(href) ? 'page' : undefined}>{label}</a>)}
+  </nav>
+  <OrderLink class="header-order" />
+  <details class="mobile-menu">
+    <summary aria-label="Menu nawigacji" aria-controls="mobile-navigation"><span class="menu-lines" aria-hidden="true"></span></summary>
+    <nav id="mobile-navigation" aria-label="Nawigacja mobilna">
+      {navigation.map(({ label, href }) => <a href={href} aria-current={isCurrent(href) ? 'page' : undefined}>{label}</a>)}
+      <a href="/kontakt" aria-current={current === '/kontakt' ? 'page' : undefined}>Kontakt</a>
+      <OrderLink />
+    </nav>
+  </details>
+</header>
+<script>
+  const menu = document.querySelector<HTMLDetailsElement>('.mobile-menu');
+  const summary = menu?.querySelector('summary');
+  if (menu && summary) {
+    summary.setAttribute('aria-expanded', String(menu.open));
+    menu.addEventListener('toggle', () => summary.setAttribute('aria-expanded', String(menu.open)));
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && menu.open) { menu.open = false; summary.focus(); }
+    });
+    document.addEventListener('click', (event) => {
+      if (event.target instanceof Node && !menu.contains(event.target)) menu.open = false;
+    });
+    menu.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => { menu.open = false; }));
+    window.matchMedia('(min-width: 901px)').addEventListener('change', () => { menu.open = false; });
+  }
+</script>

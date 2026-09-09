@@ -1,0 +1,17 @@
+---
+import { diets } from '../data/diets';
+import Arrow from './Arrow.astro';
+interface Props { expanded?: boolean; }
+const { expanded = false } = Astro.props;
+---
+<div class:list={['diet-grid', { 'diet-grid-expanded': expanded }]}>
+  {diets.map((diet, index) => (
+    <article class="diet-card">
+      <span class="diet-number" aria-hidden="true">0{index + 1}</span>
+      <h3>{diet.name}</h3>
+      <p>{diet.teaser}</p>
+      {expanded && <p class="diet-description">{diet.description}</p>}
+      <a class="text-link" href={`/diety/${diet.id}`} aria-label={`Poznaj dietę ${diet.name}`}>Poznaj dietę <Arrow /></a>
+    </article>
+  ))}
+</div>

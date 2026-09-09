@@ -1,0 +1,33 @@
+---
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import OrderLink from '../../components/OrderLink.astro';
+import Arrow from '../../components/Arrow.astro';
+import { diets } from '../../data/diets';
+
+export const getStaticPaths = (() => diets.map((diet) => ({ params: { slug: diet.id }, props: { diet } }))) satisfies GetStaticPaths;
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { diet } = Astro.props;
+---
+<BaseLayout title={`Dieta ${diet.name} — ${diet.teaser} | Normal Food`} description={diet.metaDescription} diet={diet.id} orderLabel={`Wybieram ${diet.name}`}>
+  <div class="shell inner-page">
+    <a class="back-link" href="/diety"><span aria-hidden="true">←</span> Wszystkie diety</a>
+    <div class="diet-detail-grid">
+      <section class="diet-detail-copy">
+        <p class="eyebrow">Dieta {diet.name}</p>
+        <h1>{diet.teaser}</h1>
+        <p class="lead">{diet.description}</p>
+        <OrderLink diet={diet.id}>Wybieram {diet.name}</OrderLink>
+        <p class="small-note">Dostawa w Warszawie. Warianty i ceny dostępne przy zamówieniu.</p>
+      </section>
+      <aside class="diet-example" aria-labelledby="example-title">
+        <p class="eyebrow">Na przykład na obiad</p>
+        <h2 id="example-title">{diet.example.title}</h2>
+        <p>{diet.example.description}</p>
+        <a class="text-link" href={`/menu#${diet.id}`}>Zobacz przykładowe menu <Arrow /></a>
+      </aside>
+    </div>
+    <section class="details-section" aria-labelledby="details-title"><h2 id="details-title">Co warto wiedzieć?</h2><ul class="facts-list">{diet.details.map((detail) => <li>{detail}</li>)}</ul></section>
+    <div class="quiet-note">Potrzebujesz pomocy w wyborze? <a href="/kontakt">Porozmawiaj z nami.</a></div>
+  </div>
+</BaseLayout>

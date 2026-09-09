@@ -1,0 +1,72 @@
+---
+import { diets } from '../data/diets';
+import { menus, menuDays } from '../data/menu';
+import { getOrderUrl } from '../config/foodflow';
+import OrderLink from './OrderLink.astro';
+---
+<div class="menu-explorer" data-menu-explorer>
+  <div class="menu-controls" hidden>
+    <fieldset class="diet-switch"><legend class="sr-only">Wybierz dietę</legend>
+      {diets.map((diet, index) => <label><input type="radio" name="menu-diet" value={diet.id} checked={index === 0} /><span>{diet.name}</span></label>)}
+    </fieldset>
+    <fieldset class="day-switch"><legend class="sr-only">Wybierz przykładowy dzień</legend>
+      {menuDays.map((day, index) => <label><input type="radio" name="menu-day" value={day.id} checked={index === 0} /><span><span class="day-long">{day.name}</span><span class="day-short" aria-hidden="true">{day.short}</span><span class="sr-only day-accessible">{day.name}</span></span></label>)}
+    </fieldset>
+    <p class="sr-only" aria-live="polite" aria-atomic="true" data-menu-status></p>
+  </div>
+  <noscript><p class="quiet-note">Rozwiń wybraną dietę, aby zobaczyć pięć przykładowych dni. Jadłospis jest dostępny także bez JavaScriptu.</p></noscript>
+  {menus.map((menu, index) => {
+    const diet = diets.find((item) => item.id === menu.diet)!;
+    return <details class="menu-group" id={diet.id} data-menu-group data-diet={diet.id} data-name={diet.name} data-order-url={getOrderUrl(diet.id)} open={index === 0}>
+      <summary>Dieta {diet.name}</summary>
+      <p class="menu-note">{menu.note}</p>
+      {menu.days.map((day) => <section class="menu-day" data-menu-day={day.id} aria-labelledby={`${diet.id}-${day.id}`}>
+        <h2 class="menu-day-heading" id={`${diet.id}-${day.id}`}>{day.name}<span> / {diet.name}</span></h2>
+        <ol class="meal-list">{day.meals.map((meal) => <li><p class="meal-label">{meal.label}</p><h3>{meal.name}</h3><p>{meal.description}</p></li>)}</ol>
+      </section>)}
+      <div class="menu-order"><OrderLink diet={diet.id}>Wybieram {diet.name}</OrderLink><span>Swój wariant wybierzesz przy zamówieniu.</span></div>
+    </details>;
+  })}
+</div>
+<script>
+  const explorer = document.querySelector<HTMLElement>('[data-menu-explorer]');
+  if (explorer) {
+    const controls = explorer.querySelector<HTMLElement>('.menu-controls');
+    const groups = Array.from(explorer.querySelectorAll<HTMLDetailsElement>('[data-menu-group]'));
+    const dietInputs = Array.from(explorer.querySelectorAll<HTMLInputElement>('input[name="menu-diet"]'));
+    const dayInputs = Array.from(explorer.querySelectorAll<HTMLInputElement>('input[name="menu-day"]'));
+    const initialDiet = window.location.hash.slice(1);
+    const initialInput = dietInputs.find((input) => input.value === initialDiet);
+    if (initialInput) initialInput.checked = true;
+
+    const update = (updateHash = true) => {
+      const diet = dietInputs.find((input) => input.checked)?.value ?? 'standard';
+      const day = dayInputs.find((input) => input.checked)?.value ?? 'poniedzialek';
+      groups.forEach((group) => {
+        group.open = true;
+        group.hidden = group.dataset['diet'] !== diet;
+        group.querySelectorAll<HTMLElement>('[data-menu-day]').forEach((panel) => {
+          panel.hidden = panel.dataset['menuDay'] !== day;
+        });
+      });
+      const selected = groups.find((group) => group.dataset['diet'] === diet);
+      const status = explorer.querySelector<HTMLElement>('[data-menu-status]');
+      const heading = selected?.querySelector<HTMLElement>('.menu-day:not([hidden]) h2');
+      if (status) status.textContent = `Przykładowe menu: ${heading?.textContent ?? ''}`;
+      const mobileOrder = document.querySelector<HTMLAnchorElement>('.mobile-order-link');
+      if (mobileOrder && selected?.dataset['orderUrl']) {
+        mobileOrder.href = selected.dataset['orderUrl'];
+        mobileOrder.textContent = `Wybieram ${selected.dataset['name']}`;
+      }
+      if (updateHash) window.history.replaceState(null, '', `#${diet}`);
+    };
+    explorer.classList.add('is-enhanced');
+    if (controls) controls.hidden = false;
+    explorer.addEventListener('change', () => update());
+    window.addEventListener('hashchange', () => {
+      const input = dietInputs.find((item) => item.value === window.location.hash.slice(1));
+      if (input) { input.checked = true; update(false); }
+    });
+    update(false);
+  }
+</script>

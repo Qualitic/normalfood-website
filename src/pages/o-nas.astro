@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import Arrow from '../components/Arrow.astro';
+import { pages } from '../data/site';
+---
+<BaseLayout {...pages.about}>
+  <div class="shell inner-page">
+    <PageIntro eyebrow="O Normal Food" title="Lubimy, kiedy smakuje jak w domu." description="Znane potrawy. Codzienna wygoda. Więcej czasu na to, co lubisz." />
+    <div class="story-grid">
+      <section><h2>Z naszej kuchni do Twojego domu.</h2><p>Normal Food powstało z doświadczenia w gotowaniu dla innych. Nasz zespół działa w gastronomii od 2001 roku, przygotowując posiłki dla szkół, przedszkoli, firm i na spotkania.</p><p>Dziś tę kuchnię możesz mieć u siebie. Dostarczamy całodzienne zestawy i obiady pod drzwi domów w Warszawie.</p><a class="text-link" href="/diety">Poznaj nasze diety <Arrow /></a></section>
+      <section class="soft-panel"><p class="eyebrow">Po prostu domowe jedzenie</p><h2>Smaki, do których chce się wracać.</h2><p>Rosół, kopytka, schabowy czy pierogi ruskie. W naszym przykładowym menu znajdziesz klasyki polskiej kuchni i bezmięsne propozycje.</p><a class="text-link" href="/menu">Zobacz, co gotujemy <Arrow /></a></section>
+    </div>
+  </div>
+</BaseLayout>

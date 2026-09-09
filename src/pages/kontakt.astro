@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import OrderLink from '../components/OrderLink.astro';
+import { brand, pages } from '../data/site';
+---
+<BaseLayout {...pages.contact}>
+  <div class="shell inner-page">
+    <PageIntro eyebrow="Kontakt" title="Porozmawiajmy o dobrym jedzeniu." description="Pomożemy Ci wybrać dietę i odpowiemy na pytania o dostawę." />
+    <address class="contact-grid">
+      <div><h2>Zadzwoń</h2><a href={brand.phoneHref}>{brand.phone}</a><p>Chętnie odpowiemy na Twoje pytania.</p></div>
+      <div><h2>Napisz</h2><a href={`mailto:${brand.email}`}>{brand.email}</a><p>Jesteśmy po drugiej stronie.</p></div>
+      <div><h2>Znajdziesz nas tutaj</h2><p class="contact-address">{brand.street}<br />{brand.postalCode} {brand.city}</p></div>
+    </address>
+    <div class="contact-order"><div><h2>Masz już swój wybór?</h2><p>Zamów wygodnie online przez FoodFlow.</p></div><OrderLink /></div>
+  </div>
+</BaseLayout>

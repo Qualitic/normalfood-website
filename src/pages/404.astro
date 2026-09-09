@@ -1,0 +1,7 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+---
+<BaseLayout title="Nie znaleziono strony | Normal Food" description="Tej strony nie ma. Wróć na stronę główną Normal Food lub zajrzyj do naszych diet." noindex>
+  <div class="shell inner-page not-found"><PageIntro eyebrow="Błąd 404" title="Tu nic się nie gotuje." description="Ta strona nie istnieje lub zmieniła adres. Wróć do nas po coś dobrego." /><div class="flex flex-wrap items-center gap-6"><a href="/" class="button">Wróć na stronę główną</a><a href="/diety" class="text-link">Poznaj nasze diety <span aria-hidden="true">→</span></a></div></div>
+</BaseLayout>

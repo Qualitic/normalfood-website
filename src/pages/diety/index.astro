@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import DietList from '../../components/DietList.astro';
+import { pages, home } from '../../data/site';
+---
+<BaseLayout {...pages.diets}>
+  <div class="shell inner-page">
+    <PageIntro eyebrow="Nasze diety" title={home.offerTitle} description={home.offerDescription} />
+    <section aria-labelledby="diets-heading"><h2 class="sr-only" id="diets-heading">Poznaj nasze cztery diety</h2><DietList expanded /></section>
+    <p class="quiet-note">Dostępne warianty i szczegóły oferty znajdziesz podczas zamówienia. Chcesz najpierw zobaczyć, co gotujemy? <a href="/menu">Poznaj przykładowe menu.</a></p>
+  </div>
+</BaseLayout>

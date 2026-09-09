@@ -1,0 +1,27 @@
+---
+import { Picture } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import OrderLink from '../components/OrderLink.astro';
+import DietList from '../components/DietList.astro';
+import { home } from '../data/site';
+import hero from '../assets/hero-schabowy.png';
+---
+<BaseLayout title={home.title} description={home.description}>
+  <section class="hero shell" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <p class="eyebrow">{home.eyebrow}</p>
+      <h1 id="hero-title">{home.headline[0]}<br /><span>{home.headline[1]}</span></h1>
+      <p class="hero-description">{home.intro}</p>
+      <div class="hero-actions"><OrderLink>Wybierz dietę</OrderLink><a class="text-link" href="/menu">Zobacz menu</a></div>
+      <a class="delivery-note" href="/dostawa"><svg width="18" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z" /><circle cx="12" cy="10" r="2.5" /></svg>Dostawa w Warszawie</a>
+    </div>
+    <div class="hero-image">
+      <Picture src={hero} formats={['avif', 'webp']} fallbackFormat="jpg" widths={[360, 540, 720, 1080, 1254]} sizes="(max-width: 600px) calc(100vw - 40px), (max-width: 700px) 500px, (max-width: 900px) 42vw, (max-width: 1200px) 46vw, 620px" width={620} height={620} loading="eager" fetchpriority="high" quality={75} alt="Schabowy, ziemniaki z koperkiem i mizeria na jasnym talerzu — wizualizacja dania" />
+    </div>
+  </section>
+  <section class="home-offer shell" aria-labelledby="offer-title">
+    <h2 id="offer-title">{home.offerTitle}</h2>
+    <p class="section-description">{home.offerDescription}</p>
+    <DietList />
+  </section>
+</BaseLayout>
