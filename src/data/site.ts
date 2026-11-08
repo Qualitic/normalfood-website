@@ -18,19 +18,19 @@ export const navigation = [
 ] as const;
 
 export const home = {
-  title: 'Normal Food — domowa kuchnia z dostawą w Warszawie',
-  description: 'Znane smaki, więcej czasu dla siebie. Poznaj diety Standard, Wege, Sport i Lunch. Domowe posiłki z dostawą w Warszawie.',
+  title: 'Normal Food — domowe jedzenie z dostawą w całej Polsce',
+  description: 'Znane smaki, więcej czasu dla siebie. Poznaj diety Standard, Wege, Sport i Lunch. Domowe posiłki z dostawą w całej Polsce.',
   eyebrow: 'Domowa kuchnia polska',
-  headline: ['Jak w domu.', 'Bez gotowania.'],
+  headline: ['Domowe smaki.', 'Twój wolny czas.'],
   intro: 'Znane smaki, więcej czasu dla siebie. Domowe posiłki prosto pod Twoje drzwi.',
   offerTitle: 'Wybierz coś dla siebie.',
   offerDescription: 'Cztery propozycje. Ten sam domowy smak.',
 } as const;
 
 export const pages = {
-  diets: { title: 'Nasze diety — Standard, Wege, Sport i Lunch | Normal Food', description: 'Wybierz domowe posiłki na cały dzień lub sam obiad. Poznaj cztery propozycje cateringu Normal Food w Warszawie.' },
+  diets: { title: 'Nasze diety — Standard, Wege, Sport i Lunch | Normal Food', description: 'Wybierz domowe posiłki na cały dzień lub sam obiad. Poznaj cztery propozycje cateringu Normal Food z dostawą w całej Polsce.' },
   menu: { title: 'Przykładowe menu na pięć dni | Normal Food', description: 'Zobacz przykładowe dania diet Standard, Wege, Sport i Lunch. Domowe śniadania, obiady i kolacje. To inspiracja, nie aktualny jadłospis.' },
-  delivery: { title: 'Dostawa cateringu w Warszawie | Normal Food', description: 'Normal Food dostarcza domowe posiłki na terenie całej Warszawy. Dostępność pod konkretnym adresem sprawdzisz podczas zamówienia.' },
+  delivery: { title: 'Dostawa cateringu w całej Polsce | Normal Food', description: 'Normal Food dostarcza domowe posiłki na terenie całej Polski. Dostępność pod konkretnym adresem sprawdzisz podczas zamówienia.' },
   about: { title: 'O nas — domowe jedzenie i znane smaki | Normal Food', description: 'Poznaj Normal Food. Warszawski catering, domowa kuchnia polska i zespół z doświadczeniem w gastronomii od 2001 roku.' },
   contact: { title: 'Kontakt — telefon, e-mail i adres | Normal Food', description: 'Skontaktuj się z Normal Food: +48 728 830 787, kontakt@normalfood.pl. Znajdziesz nas przy Łukowskiej 46 w Warszawie.' },
 } as const;

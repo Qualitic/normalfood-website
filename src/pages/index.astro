@@ -1,27 +1,116 @@
 ---
-import { Picture } from 'astro:assets';
-import BaseLayout from '../layouts/BaseLayout.astro';
-import OrderLink from '../components/OrderLink.astro';
-import DietList from '../components/DietList.astro';
-import { home } from '../data/site';
-import hero from '../assets/hero-schabowy.png';
+import '../styles/home.css';
+import { brand, home } from '../data/site';
+import { getOrderUrl } from '../config/foodflow';
+const site = Astro.site ?? new URL('https://normalfood.pl');
+const canonical = new URL('/', site);
+const structuredData = {
+  '@context': 'https://schema.org', '@type': 'FoodEstablishment', name: brand.name,
+  url: site.href, logo: new URL('/logo.png', site).href,
+  telephone: brand.phone, email: brand.email,
+  address: { '@type': 'PostalAddress', streetAddress: brand.street, postalCode: brand.postalCode, addressLocality: brand.city, addressCountry: 'PL' },
+  areaServed: { '@type': 'Country', name: 'Polska' },
+};
 ---
-<BaseLayout title={home.title} description={home.description}>
-  <section class="hero shell" aria-labelledby="hero-title">
-    <div class="hero-copy">
-      <p class="eyebrow">{home.eyebrow}</p>
-      <h1 id="hero-title">{home.headline[0]}<br /><span>{home.headline[1]}</span></h1>
-      <p class="hero-description">{home.intro}</p>
-      <div class="hero-actions"><OrderLink>Wybierz dietę</OrderLink><a class="text-link" href="/menu">Zobacz menu</a></div>
-      <a class="delivery-note" href="/dostawa"><svg width="18" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z" /><circle cx="12" cy="10" r="2.5" /></svg>Dostawa w całej Polsce</a>
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#193D32">
+  <title>{home.title}</title>
+  <meta name="description" content={home.description}>
+  <meta property="og:title" content={home.title}>
+  <meta property="og:description" content={home.description}>
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pl_PL">
+  <meta property="og:image" content={new URL("/og-normalfood.jpg", site).href}>
+  <meta property="og:url" content={canonical}>
+  <meta property="og:site_name" content={brand.name}>
+  <link rel="canonical" href={canonical}>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData).replace(/</g, '\\u003c')} />
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="preload" href="/normalfood/bricolage-700.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="/normalfood/dm-sans-400.ttf" as="font" type="font/ttf" crossorigin>
+  <script>import '../scripts/home.js';</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Przejdź do treści</a>
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="i-truck" viewBox="0 0 24 24"><path d="M3 6h11v11H3zM14 10h4l3 4v3h-7M7 17a2 2 0 1 0 0 4 2 2 0 0 0 0-4m11 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4M1 10h5M1 13h3"/></symbol>
+    <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M20 3C8 1 2 8 6 15s16 5 14-12ZM4 21 16 8M9 16v-5m4 1h5"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="m8 3 2 5-3 2a16 16 0 0 0 7 7l2-3 5 2v3a2 2 0 0 1-2 2C10 21 3 14 3 5a2 2 0 0 1 2-2Z"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 6 9 7 9-7"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+  </defs></svg>
+
+  <div class="delivery-ribbon"><svg class="icon"><use href="#i-truck"/></svg><span>Domowe jedzenie. Dostawa w całej Polsce.</span></div>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#" aria-label="Normal Food — strona główna"><img src="/normalfood/logo.png" width="155" height="91" alt="Normal Food — całodzienne domowe jedzenie"></a>
+      <nav id="main-nav" class="main-nav" aria-label="Nawigacja główna"><a href="#diety">Nasze diety</a><a href="#na-talerzu">Na talerzu</a><a href="#dostawa">Jak to działa</a><a href="#o-nas">O nas</a><a href="#kontakt">Kontakt</a></nav>
+      <div class="header-actions"><a class="button button-small order-link" href={getOrderUrl()} data-order-link>Zamów dietę</a><button class="menu-toggle" type="button" aria-label="Otwórz menu" aria-expanded="false" aria-controls="main-nav"><span></span><span></span></button></div>
     </div>
-    <div class="hero-image">
-      <Picture src={hero} formats={['avif', 'webp']} fallbackFormat="jpg" widths={[360, 540, 720, 1080, 1254]} sizes="(max-width: 600px) calc(100vw - 40px), (max-width: 700px) 500px, (max-width: 900px) 42vw, (max-width: 1200px) 46vw, 620px" width={620} height={620} loading="eager" fetchpriority="high" quality={75} alt="Schabowy, ziemniaki z koperkiem i mizeria na jasnym talerzu — wizualizacja dania" />
-    </div>
-  </section>
-  <section class="home-offer shell" aria-labelledby="offer-title">
-    <h2 id="offer-title">{home.offerTitle}</h2>
-    <p class="section-description">{home.offerDescription}</p>
-    <DietList />
-  </section>
-</BaseLayout>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <h1 id="hero-heading"><span class="hero-heading-line">{home.headline[0]}</span> <span class="hero-heading-line">{home.headline[1]}</span></h1>
+          <p>My gotujemy. Ty robisz to, co lubisz. <br>Jedz po domowemu i odzyskaj czas dla siebie — z&nbsp;posiłkami prosto pod Twoje drzwi.</p>
+          <div class="hero-actions"><a class="button order-link" href={getOrderUrl()} data-order-link>Zamów dietę<svg class="icon"><use href="#i-arrow"/></svg></a><a class="text-link" href="#diety">Najpierw poznam diety</a></div>
+          <div class="hero-note"><svg class="icon"><use href="#i-heart"/></svg>Znane smaki. Mniej codziennych obowiązków.</div>
+        </div>
+        <div class="hero-visual">
+          <div class="tablecloth" aria-hidden="true"></div>
+          <div class="plate-wrap"><img class="hero-plate" src="/normalfood/schabowy.webp" width="1080" height="1080" fetchpriority="high" alt="Schabowy z ziemniakami, koperkiem i mizerią — wizualizacja domowego dania"></div>
+          <div class="delivery-seal"><svg class="icon"><use href="#i-truck"/></svg><span>Dostawa <br>w całej Polsce</span></div>
+          <div class="dish-note"><span>Domowy klasyk</span><strong>Schabowy, ziemniaki i mizeria</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="promise-band"><div class="container promise-grid"><p><svg class="icon"><use href="#i-heart"/></svg>Domowa kuchnia</p><p><svg class="icon"><use href="#i-leaf"/></svg>Różne diety do wyboru</p><p><svg class="icon"><use href="#i-truck"/></svg>Dostawa pod Twoje drzwi</p><p><svg class="icon"><use href="#i-clock"/></svg>Więcej czasu dla siebie</p></div></div>
+
+    <section class="section diets-section container" id="diety" aria-labelledby="diet-heading">
+      <div class="section-heading"><h2 id="diet-heading">Każdy ma <br>swój apetyt.</h2><p>Wolisz domowe klasyki, kuchnię bez mięsa,<br class="desktop-break"> a może szukasz po prostu dobrego obiadu?<br class="desktop-break"> Poznaj nasze cztery propozycje.</p></div>
+      <div class="diet-tabs" role="tablist" aria-label="Rodzaje diet">
+        <button class="diet-tab" id="tab-standard" type="button" role="tab" aria-selected="true" aria-controls="diet-panel" tabindex="0" data-diet="standard" data-order-url={getOrderUrl('standard')}><span>Standard</span><small>Domowe klasyki</small></button>
+        <button class="diet-tab" id="tab-wege" type="button" role="tab" aria-selected="false" aria-controls="diet-panel" tabindex="-1" data-diet="wege" data-order-url={getOrderUrl('wege')}><span>Wege</span><small>Smak bez mięsa</small></button>
+        <button class="diet-tab" id="tab-sport" type="button" role="tab" aria-selected="false" aria-controls="diet-panel" tabindex="-1" data-diet="sport" data-order-url={getOrderUrl('sport')}><span>Sport</span><small>Dla aktywnych</small></button>
+        <button class="diet-tab" id="tab-lunch" type="button" role="tab" aria-selected="false" aria-controls="diet-panel" tabindex="-1" data-diet="lunch" data-order-url={getOrderUrl('lunch')}><span>Lunch</span><small>Obiad z głowy</small></button>
+      </div>
+      <div id="diet-panel" class="diet-panel" role="tabpanel" aria-labelledby="tab-standard" tabindex="0">
+        <figure class="diet-photo"><img id="diet-image" src="/normalfood/klopsy.jpg" width="2048" height="1736" alt="Klopsy z purée, marchewką i brokułami" loading="lazy"><figcaption id="diet-caption">Z naszej kuchni: klopsy z purée i warzywami</figcaption></figure>
+        <div class="diet-copy"><p class="diet-name" id="diet-name">Dieta Standard</p><h3 id="diet-title">Dobrze znane. <br>Codziennie lubiane.</h3><p id="diet-description">Dla tych, którzy lubią jeść po domowemu. Urozmaicone posiłki, znajome składniki i klasyki, do których chce się wracać.</p><ul id="diet-features" class="check-list"><li>Tradycyjne smaki w codziennym menu</li><li>Całodzienne wyżywienie</li><li>Kaloryczność do wyboru przy zamówieniu</li></ul><a class="button button-green order-link" href={getOrderUrl('standard')} data-order-link data-diet-order>Zamów dietę<svg class="icon"><use href="#i-arrow"/></svg></a><p class="order-note">Aktualną ofertę i ceny znajdziesz w panelu zamówień.</p></div>
+      </div>
+      <noscript><div class="noscript-diets"><p><strong>Wege:</strong> urozmaicone posiłki bez mięsa. <strong>Sport:</strong> więcej białka dla osób aktywnych. <strong>Lunch:</strong> domowe obiady. Wszystkie diety i aktualne ceny znajdziesz w panelu zamówień.</p></div></noscript>
+    </section>
+
+    <section class="food-section" id="na-talerzu" aria-labelledby="food-heading"><div class="container">
+      <div class="section-heading"><div><p class="section-intro">Tak gotujemy w Normal Food</p><h2 id="food-heading">Znajome smaki. <br>Po prostu dobre jedzenie.</h2></div><p>Od śniadania po domowy obiad. <br>Oto kilka dań z naszej kuchni.</p></div>
+      <div class="food-gallery"><figure><div class="food-image"><img src="/normalfood/zupa.jpg" width="2048" height="1487" loading="lazy" alt="Krem z pomidorów ze śmietaną i bazylią"></div><figcaption><h3>Krem z pomidorów</h3><p>Pomidorowy klasyk z kremową śmietaną.</p></figcaption></figure><figure><div class="food-image"><img src="/normalfood/sniadanie.jpg" width="700" height="600" loading="lazy" alt="Śniadanie: łosoś, jajka, twarożek i pieczywo"></div><figcaption><h3>Dobry początek dnia</h3><p>Łosoś, jajka, twarożek i pieczywo.</p></figcaption></figure><figure><div class="food-image"><img src="/normalfood/danie-06.jpg" width="700" height="600" loading="lazy" alt="Mięso w sosie z kluskami śląskimi i buraczkami"></div><figcaption><h3>Obiad jak u siebie</h3><p>Kluski śląskie, mięso w sosie i buraczki.</p></figcaption></figure></div>
+      <p class="gallery-note">Przykładowe dania. Bieżącą ofertę sprawdzisz podczas zamawiania.</p>
+    </div></section>
+
+    <section class="delivery-section section container" id="dostawa" aria-labelledby="delivery-heading">
+      <div class="delivery-heading"><div class="location-mark"><svg class="icon"><use href="#i-truck"/></svg><span>Dostawa w całej Polsce</span></div><h2 id="delivery-heading">Od naszej kuchni <br>do Twojego stołu.</h2><p>Ty wybierasz. My zajmujemy się gotowaniem. <br>Do dobrego jedzenia prowadzą trzy proste kroki.</p></div>
+      <ol class="steps"><li><span class="step-number">1</span><h3>Wybierz swoją dietę</h3><p>Przejdź do panelu zamówień i znajdź plan dla siebie. Sprawdzisz tam aktualne warianty i ceny.</p></li><li><span class="step-number">2</span><h3>Zaplanuj dostawy</h3><p>Podaj swój adres i wybierz dostępne terminy. Szczegóły dostawy poznasz przy zamówieniu.</p></li><li><span class="step-number">3</span><h3>Zajmij się swoim dniem</h3><p>My przygotujemy posiłki i dostarczymy je pod wskazany adres. Tobie zostaje cieszyć się jedzeniem.</p></li></ol>
+      <a class="button order-link" href={getOrderUrl()} data-order-link>Zamów dietę<svg class="icon"><use href="#i-arrow"/></svg></a>
+    </section>
+
+    <section class="about-section" id="o-nas" aria-labelledby="about-heading"><div class="container about-grid"><div class="about-sign"><svg class="icon"><use href="#i-heart"/></svg><p>Gotujemy <br>po ludzku. <br>Od 2001.</p><span>Doświadczenie w gastronomii</span></div><div class="about-copy"><h2 id="about-heading">Za Normal Food <br>stoi prawdziwa kuchnia.</h2><p>Nasze doświadczenie w gastronomii sięga 2001 roku. Gotujemy dla szkół, przedszkoli i firm, a w Normal Food przenosimy domowe smaki prosto do Twojego codziennego menu.</p><p>Lubimy jedzenie, które znasz i na które masz ochotę wracać. Dlatego w naszej kuchni jest miejsce na tradycyjny obiad, warzywa i różnorodność.</p><a class="text-link" href="#kontakt">Porozmawiajmy o Twojej diecie<svg class="icon"><use href="#i-arrow"/></svg></a></div></div></section>
+
+    <section class="faq-section section container" aria-labelledby="faq-heading"><div><h2 id="faq-heading">Warto wiedzieć <br>przed pierwszym <br>zamówieniem.</h2><p>Nie znajdujesz odpowiedzi? <br><a class="text-link" href="tel:+48728830787">Zadzwoń do nas</a> — chętnie pomożemy.</p></div><div class="faq-list"><details><summary>Gdzie dostarczacie posiłki?</summary><p>Dostarczamy w całej Polsce. Dokładny adres i dostępne terminy dostaw podasz w panelu zamówień.</p></details><details><summary>Jak zamówić dietę?</summary><p>Kliknij „Zamów dietę”. Przejdziesz do naszego panelu zamówień FoodFlow, gdzie wybierzesz dietę, ustawisz dostawy i opłacisz zamówienie.</p></details><details><summary>Gdzie sprawdzę ceny i kaloryczności?</summary><p>Aktualne warianty, kaloryczności i ceny są dostępne w panelu zamówień. Dzięki temu przed zakupem widzisz aktualną ofertę dla wybranego planu.</p></details><details><summary>Czy znajdę dietę bez mięsa?</summary><p>Tak, przygotowaliśmy dietę Wege. Poznaj ją w sekcji „Nasze diety”, a dostępne warianty sprawdź w panelu zamówień.</p></details><details><summary>Mam już zamówienie. Gdzie nim zarządzać?</summary><p>Obsługa zamówień odbywa się w panelu klienta FoodFlow. <a class="order-link" href={getOrderUrl()} data-order-link>Przejdź do panelu klienta</a> lub skontaktuj się z nami, jeśli potrzebujesz pomocy.</p></details></div></section>
+
+    <section class="closing-section" aria-labelledby="closing-heading"><div class="container closing-inner"><div><p>Dziś odpuść sobie gotowanie.</p><h2 id="closing-heading">Zrobimy Ci <br>coś dobrego.</h2></div><div class="closing-action"><a class="button button-light order-link" href={getOrderUrl()} data-order-link>Zamów dietę<svg class="icon"><use href="#i-arrow"/></svg></a><span>Z dostawą w całej Polsce.</span></div></div></section>
+  </main>
+
+  <footer id="kontakt" class="site-footer"><div class="container"><div class="footer-main"><div class="footer-brand"><a href="#" aria-label="Normal Food — wróć na początek"><img src="/normalfood/logo.png" width="170" height="100" alt="Normal Food"></a><p>Domowe smaki. <br>Codziennie bliżej Ciebie.</p></div><div><h2>Porozmawiajmy</h2><a class="contact-link" href="tel:+48728830787"><svg class="icon"><use href="#i-phone"/></svg>+48 728 830 787</a><a class="contact-link" href="mailto:kontakt@normalfood.pl"><svg class="icon"><use href="#i-mail"/></svg>kontakt@normalfood.pl</a><p>Łukowska 46, 04-133 Warszawa</p></div><div class="footer-links"><h2>Na dobry początek</h2><a href="#diety">Poznaj nasze diety</a><a href="#dostawa">Jak działa dostawa</a><a href="/menu">Przykładowe menu</a><a class="order-link" href={getOrderUrl()} data-order-link>Panel klienta</a></div></div><div class="footer-bottom"><span>© <span id="year">2026</span> Normal Food</span><span>Zamówienia online obsługuje FoodFlow.</span></div></div></footer>
+  <div class="mobile-order"><span>Coś dobrego <br><strong>na każdy dzień.</strong></span><a class="button button-small order-link" href={getOrderUrl()} data-order-link>Zamów dietę</a></div>
+</body>
+</html>

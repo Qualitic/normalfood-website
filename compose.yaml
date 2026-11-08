@@ -1,0 +1,18 @@
+name: normalfood
+services:
+  web:
+    image: normalfood-web:${SOURCE_REVISION:?Ustaw SOURCE_REVISION}
+    build:
+      context: .
+      args:
+        SOURCE_REVISION: "${SOURCE_REVISION:?Ustaw SOURCE_REVISION}"
+        PUBLIC_SITE_URL: "${PUBLIC_SITE_URL:?Ustaw PUBLIC_SITE_URL w .env}"
+        PUBLIC_FOODFLOW_ORDER_URL: "${PUBLIC_FOODFLOW_ORDER_URL:?Ustaw PUBLIC_FOODFLOW_ORDER_URL w .env}"
+    restart: unless-stopped
+    ports:
+      - "192.168.100.162:8081:80"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

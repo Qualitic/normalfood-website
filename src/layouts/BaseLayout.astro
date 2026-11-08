@@ -16,7 +16,7 @@ const structuredData = {
   url: site.href, logo: new URL('/logo.png', site).href,
   telephone: brand.phone, email: brand.email,
   address: { '@type': 'PostalAddress', streetAddress: brand.street, postalCode: brand.postalCode, addressLocality: brand.city, addressCountry: 'PL' },
-  areaServed: { '@type': 'City', name: brand.city },
+  areaServed: { '@type': 'Country', name: 'Polska' },
 };
 ---
 <!doctype html>
