@@ -1,5 +1,15 @@
 # Materiały
 
+## Zatwierdzona strona główna (2026-11-08)
+
+`public/normalfood/` zachowuje materiały zaakceptowane w propozycji „Domowe smaki. Twój wolny czas.”:
+
+- Logo i `schabowy.webp`: dotychczasowa strona `https://normalfood.qualitic.pl`. Schabowy pozostaje oznaczony w tekście alternatywnym jako wizualizacja.
+- `klopsy.jpg`, `zupa.jpg`, `sniadanie.jpg`, `danie-06.jpg`: rzeczywiste zdjęcia galerii Normal Food (`https://normalfood.pl/images/gallery/02.JPG`, `01.JPG`, `03.JPG`, `06.JPG`), pobrane w trakcie przygotowania zaakceptowanej propozycji.
+- Bricolage Grotesque 700 i DM Sans 400/600: lokalne pliki fontów i obie licencje OFL w tym samym katalogu. Przeglądarka nie potrzebuje zewnętrznego serwera fontów.
+
+## Wcześniejsze materiały zachowane w repozytorium
+
 - `public/logo.png`: pobrane bez modyfikacji z https://normalfood.pl/images/logo.png, 08.09.2026. Oryginalny znak i proporcje. `public/favicon.png` to pomniejszona wersja tego znaku z usuniętymi pustymi marginesami.
 - `src/assets/normalfood-klopsy.jpg`: rzeczywiste zdjęcie pobrane do analizy z https://normalfood.pl/images/gallery/02.JPG. Nie jest wyświetlane w witrynie; ciemne tło nie pasuje do zaakceptowanej kompozycji.
 - `src/assets/hero-schabowy.png`: **grafika koncepcyjna wygenerowana wbudowanym narzędziem imagegen**, 08.09.2026. Wymaga zastąpienia rzeczywistym zdjęciem dania Normal Food lub akceptacji użycia wizualizacji. `public/og-normalfood.jpg` to jej wariant Open Graph. Zoptymalizowane warianty hero generuje Astro przy budowaniu.

@@ -1,0 +1,3 @@
+scripts/*.sh text eol=lf
+# Preserve the upstream OFL license text, including its original whitespace.
+public/normalfood/*-LICENSE.txt -whitespace

@@ -22,6 +22,13 @@ for (const width of [360, 390, 768, 1440]) {
       await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `https://normalfood.pl${route === '/' ? '/' : route}`);
       await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', 'https://normalfood.pl/og-normalfood.jpg');
       await page.evaluate(() => document.fonts.ready);
+      // The new home includes real lazy-loaded gallery images below the fold.
+      for (const image of await page.locator('img').all()) {
+        await image.scrollIntoViewIfNeeded();
+        await expect(image).toHaveJSProperty('complete', true);
+        await expect(image).not.toHaveJSProperty('naturalWidth', 0);
+      }
+      await page.evaluate(() => scrollTo(0, 0));
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
       const brokenImages = await page.locator('img').evaluateAll((images) => images.filter((img): img is HTMLImageElement => img instanceof HTMLImageElement).filter((img) => !img.complete || img.naturalWidth === 0).map((img) => img.src));
       expect(brokenImages).toEqual([]);
@@ -29,7 +36,7 @@ for (const width of [360, 390, 768, 1440]) {
         expect(href).toBe('https://foodflow.qualitic.pl');
       }
       if ((route === '/' || route === '/menu') && width !== 360) {
-        await page.screenshot({ path: `test-results/screenshots/${route === '/' ? 'home' : 'menu'}-${width}.png`, fullPage: true });
+        await page.screenshot({ path: `.artifacts/screenshots/${route === '/' ? 'home' : 'menu'}-${width}.png`, fullPage: true });
       }
     }
     expect(errors).toEqual([]);
@@ -38,7 +45,7 @@ for (const width of [360, 390, 768, 1440]) {
 
 test('Menu mobilne: klawiatura, Escape, kliknięcie poza menu i nawigacja', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/');
+  await page.goto('/diety');
   const toggle = page.locator('.mobile-menu > summary');
   await toggle.focus();
   await page.keyboard.press('Enter');
@@ -87,11 +94,14 @@ test('Jadłospis: cztery diety, pięć dni, klawiatura i adres z podstrony', asy
 test('Witryna bez JavaScriptu: treść, diety i natywna nawigacja', async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
   const page = await context.newPage();
-  await page.goto('http://127.0.0.1:4321/');
-  await expect(page.locator('h1')).toContainText('Jak w domu.');
-  await expect(page.locator('.hero-image img')).toBeVisible();
+  await page.goto(`http://127.0.0.1:${process.env['NORMALFOOD_PREVIEW_PORT'] || '4321'}/`);
+  await expect(page.locator('h1')).toContainText('Domowe smaki.');
+  await expect(page.locator('.hero-plate')).toBeVisible();
+  await page.locator('.footer-links a[href="/menu"]').click();
+  await expect(page).toHaveURL(/\/menu$/);
   await page.locator('.mobile-menu summary').click();
-  await page.locator('#mobile-navigation a[href="/menu"]').click();
+  await page.locator('#mobile-navigation a[href="/kontakt"]').click();
+  await page.goto(`http://127.0.0.1:${process.env['NORMALFOOD_PREVIEW_PORT'] || '4321'}/menu`);
   await expect(page.locator('.menu-controls')).toBeHidden();
   await expect(page.locator('#standard .menu-day')).toHaveCount(5);
   await page.locator('#wege > summary').click();

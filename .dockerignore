@@ -1,0 +1,16 @@
+.git
+node_modules
+dist
+.astro
+.env
+.env.*
+docs
+test-results
+playwright-report
+.artifacts
+.tmp
+.deployment
+*.tar
+*.tar.gz
+*.log
+npm-debug.log*
